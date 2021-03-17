@@ -17,10 +17,10 @@ class complex
 		img = r;
 	}
 	
-	complex(int real,int img)
+	complex(int r,int i)
 	{
-		real = real;
-		img = img;
+		real = r;
+		img = i;
 	}
 	
 	complex(complex &c)
