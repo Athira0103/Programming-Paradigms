@@ -1,150 +1,174 @@
 #include<iostream>
+#include<string.h>
 using namespace std;
-int ch = 0;
-int cs = 0;
-class Item
+class student
+{ 
+	long long int prn;
+	char name[10],name2[20],batch[10],branch[20],div,grade;
+	protected :
+	void get_data()
+	{
+		cout<<"Enter student name(first and second name) ";
+		cin>>name>>name2;
+		cout<<"Enter student prn ";
+		cin>>prn;
+		fflush(stdin);
+		cout<<"Enter student branch ";
+		cin>>branch;
+		fflush(stdin);
+		cout<<"Enter student batch ";
+		cin>>batch;
+		cout<<"Enter student division ";
+		cin>>div;
+	}
+		void displaydata()
+	{
+		cout<<"\nName : "<<name<<" "<<name2<<endl;
+		cout<<"PRN : "<<prn<<endl;
+		cout<<"Branch : "<<branch<<endl;
+		cout<<"Batch : "<<batch<<"\nDivision : "<<div<<endl;
+		
+	}
+};
+
+class marks : public student
 {
 	protected:
-		char Title[10][20];
-		float Price[10];
-	public:
-		virtual void get_data() = 0;
-		virtual void display_data() = 0;
+		float m[5],o[5];
+			
+	public:	
+	void getdata()
+	{
+		get_data();
+		int x,i=0;
+		while(i<=4)
+		{
+		cout<<"Enter student marks for subject "<<i+1<<" ";
+		check:
+		cin>>x;
+		if(x>=0)
+		m[i]=x;
+		else 
+		{
+			cout<<"Enter valid marks (not negative) ";
+			goto check;
+		}
+		cout<<"Enter out of marks ";
+		cin>>o[i];
+		m[i]=(m[i]/o[i])*100;
+		i++;
+	    }
+	}
+	
 };
 
-class Sales
+class sports
 {
-        protected:
-		int ts, s[10][3];
-		void get_sales(int count)
-		{
-			cout<<"Enter Sales for three months. \n";
-			for(int i=0;i<3;i++)
-			{
-				cout<<"Month "<<i+1<<" : ";
-				cin>>s[count][i];
-			}
-		}
-		int display_sales(int count)
-		{
-			ts=0;
-			for(int i=0;i<3;i++)
-			ts+=s[count][i];
-			cout<<"\nTotal Sales : "<<ts;
-			return ts;		
-		}		
-};
-class hwitem : public Item , protected Sales
-{
-	private:
-		int n;
+	protected:
+	int spmarks;
 	public:
-		void get_data()
-		{
-			cout<<"\nEnter the total number of Hardware items: ";
-			cin>>n;
-			for(int i=0;i<n;i++)
-			{
-				if(i<=ch)
-				{
-					cout<<"\nItem "<<i+1;
-				    cout<<"\nEnter the product name: ";
-			        fflush(stdin);
-		            cin>>Title[ch];	        	
-			        cout<<"Enter Price: ";
-			        cin>>Price[ch];			        
-			        get_sales(ch);
-			        ch++;
-				}				
-			}			
-		}
-		
-		void display_data()
-		{
-			cout<<"\nHardware Items : ";
-			for(int i=0;i<ch;i++)
-			{
-				cout<<"\nItem "<<i+1<<" : ";
-				cout<<"\nProduct Name : "<<Title[i]<<"\nPrice : "<<Price[i];
-			    int k = display_sales(i);
-			    cout<<"\nTotal Amount : "<<Price[i]*k<<endl;
-			}			
-		}
+	void getsports()
+	{
+	cout<<"Enter sports mark (out of 100): ";
+	check1:
+	int x;
+	cin>>x;
+	if(x>=0)
+	spmarks=x;
+	else
+	{
+		cout<<"Enter valid mark ( not negative ) ";
+		goto check1;
+	}
+	}
+	
 };
 
-class switem : public Item , protected Sales
+class result : public marks, public sports
 {
 	private:
-		int q[10],n;
+		float total, total_s;
+		float percent,percent_s;
+		char grade;	
 	public:
-		void get_data()
+	void calculate_perc()
+	{
+		int check =0;
+		for(int i=0;i<5;i++)
 		{
-			cout<<"\nEnter the total number of Software items: ";
-			cin>>n;
-			for(int i=0;i<n;i++)
+			if(m[i]<40)
 			{
-				if(i<=cs)
-				{
-					cout<<"\nItem "<<i+1;
-				    cout<<"\nEnter the product name: ";
-			        fflush(stdin);
-		            cin>>Title[cs];	        	
-			        cout<<"Enter Price: ";
-			        cin>>Price[cs];			        
-			        get_sales(cs);
-			        cs++;
-				}				
-			}			
+			grade = 'F';
+			check=1;
+			break;
+		    }
 		}
-		
-		void display_data()
+		if(check==0)
 		{
-			cout<<"\nSoftware Items : ";
-			for(int i=0;i<cs;i++)
+		total=m[0]+m[1]+m[2]+m[3]+m[4];
+		total_s=m[0]+m[1]+m[2]+m[3]+m[4]+spmarks;
+		percent = (total)/5;
+		percent_s = (total_s)/6;
+		if(percent >=90)
+		grade = 'O';
+		else if(percent>=80 && percent <90)
+		grade = 'A';
+		else if(percent>=70 && percent <80)
+		grade = 'B';
+		else if(percent>=60 && percent <70)
+		grade = 'C';
+		else if(percent>=50 && percent <60)
+		grade = 'D';
+		else 
+		grade = 'P';		
+	    }
+	}
+	void display_data()
+	{
+		displaydata();
+		if(grade=='F')
+		{
+			for(int i=0;i<=4;i++)
 			{
-				cout<<"\nItem "<<i+1<<" : ";
-				cout<<"\nProduct Name : "<<Title[i]<<"\nPrice : "<<Price[i];
-			    int k = display_sales(i);
-			    cout<<"\nTotal Amount : "<<Price[i]*k<<endl;
+				if(m[i]<40)
+				cout<<"\nSubject "<<i+1<<" : Fail";
 			}
+			cout<<"You have failed, better luck next time!"<<endl;
 		}
+				
+		else
+		{
+		cout<<"Congrats! You passed."<<endl;
+		cout<<"Total marks (without sports) : "<<total<<endl;
+		cout<<"Percentage (without sports) : "<<percent<<"%"<<endl;
+		cout<<"Grade (without sports): "<<grade<<endl;
+		cout<<"Total marks (with sports) : "<<total_s<<endl;
+		cout<<"Percentage (with sports) : "<<percent_s<<"%"<<endl;
+	    }
+	}	
+	
 };
 
 main()
 {
-	Item *I;
-	hwitem h;
-	switem s;
-	int c;
-	bool quit = false;
-	cout<<"Choose the category of items to be added to the list. "<<"\n1. Hardware Items. "<<"\n2. Software Items. "<<"\n PRESS 3 to quit.";
-	while(!quit)
-	{		
-		cout<<"\n\nEnter your choice: ";
-		cin>>(c);
-		switch(c)
-		{
-			case 1:
-				{
-				I=&h;
-				I->get_data();
-				I->display_data();
-				break;				
-				}
-			case 2:
-				{
-				I=&s;
-			    I->get_data();
-			    I->display_data();
-				break;	
-				}
-			case 3:
-			    {
-				quit=true;
-				break;
-			    }
-			default:
-				cout<<"\nWRONG CHOICE. ";
-		}
+	result r;
+	int n;
+	cout<<"Enter the number of student results to be created ";
+	check2:
+	cin>>n;
+	if(n<0)
+	{
+		cout<<"Enter valid number ( not negative ) ";
+		goto check2;
+	}
+	for(int i=0;i<n;i++)
+	{
+		cout<<"\nStudent "<<i+1<<" : \n";
+		r.getdata();
+		r.getsports();
+		r.calculate_perc();
+		r.display_data();
 	}
 }
+
+
